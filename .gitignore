@@ -1,0 +1,7 @@
+cache/
+
+*.ipynb
+*.tsv
+*.txt
+
+etalon_knrm.py
