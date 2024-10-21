@@ -125,7 +125,7 @@ class KNRM(torch.nn.Module):
 
 
     def predict(self, inputs: Dict[str, torch.Tensor]) -> torch.FloatTensor:
-        """на входе - эмбеддинги запроса и документа, на выходе релевантность - {0, 1, 2}"""
+        """на входе - номера строк id токенов запроса и документа, на выходе релевантность (-inf:+inf)"""
         # shape = [Batch, Left], [Batch, Right]
         query, doc = inputs['query'], inputs['document']
         # shape = [Batch, Left, Right]
@@ -566,24 +566,24 @@ def main():
     glue_qqp_dir = '.'
     glove_path = './glove.6B.50d.txt'
 
-    load_model_from_file = True
+    load_model_from_file = False
     if load_model_from_file:
         # Загружаем объект класса Solution
         with open('solution_model.pkl', 'rb') as f:
             solution = pickle.load(f)
     else:
-        start_program_time = time.time()
         solution = Solution(glue_qqp_dir=glue_qqp_dir, glove_vectors_path=glove_path)
-        start_training_time = time.time()
         with open('solution_model.pkl', 'wb') as f:
-            pickle.dump(self, f)
+            pickle.dump(solution, f)
     
-    load_losses_and_ndcgs_from_file = True
+    load_losses_and_ndcgs_from_file = False
     if load_losses_and_ndcgs_from_file and load_model_from_file:
         with open('ndcgs_losses.pickle', 'rb') as f:
             losses, ndcgs = pickle.load(f)
     else:
         losses, ndcgs = solution.train(20)
+        with open('trained_solution_model.pkl', 'wb') as f:
+            pickle.dump(solution, f)
         with open('ndcgs_losses.pickle', 'wb') as f:
             pickle.dump((losses, ndcgs), f)
 

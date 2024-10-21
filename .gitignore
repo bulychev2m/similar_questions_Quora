@@ -3,5 +3,11 @@ cache/
 *.ipynb
 *.tsv
 *.txt
+.pickle
+.pkl
+.json
+.bin
+.pt
 
 etalon_knrm.py
+demo.py
